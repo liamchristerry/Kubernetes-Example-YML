@@ -1,0 +1,20 @@
+#Replicated Controllers are old school. Use Deployments and define a Replica Set in it 
+apiVersion: v1
+kind: ReplicationController
+metadata:
+        name: rc-webapp (name of the replica controller, pods running will have this name)
+        labels:
+                app: webapp
+                type: front-end
+spec:
+        template:
+                metadata:
+                        name: nginxv1
+                        labels:
+                                app: webapp
+                                type: front-end
+                spec:
+                        containers:
+                                - name: nginx-webserver
+                                  image: nginx
+        replicas: 3
