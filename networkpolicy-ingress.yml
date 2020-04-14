@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: network-policy1
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      role: secure #label pods you want this policy to apply to
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector: # use this to limit what PODs are allowed
+        matchLabels:
+          role: secureaccess # PODS have to have this label to allow
+#    ports: #used to define the ports that the POD can be reached on
+#    - protocol: TCP
+#      port: 6379
+#   - ipBlock: # add this section if you want to allow IPs. Useful for allowing PING in for troublshooting. Use nodes tunl interface IP for this (Calico)
+#        cidr: 172.17.0.0/16 
+#        except:
+#        - 172.17.1.0/24
+#    - namespaceSelector:  # use this to allow entire namespaces access
+#        matchLabels:
+#          project: myproject #namespace name that you want to allow
+ 
