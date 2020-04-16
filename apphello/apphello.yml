@@ -1,0 +1,183 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: app-deployment-hellored
+    labels:
+        app: hellored
+        type: front-end
+spec:
+    template:
+        metadata:
+            name: hellored
+            labels:
+                app: hellored
+                type: front-end
+        spec:
+            containers:
+                - name: hellored
+                  image: nginx
+                  volumeMounts:
+                    - name: hellored
+                      mountPath: /etc/nginx/conf.d
+            volumes:
+                - name: hellored
+                  configMap:
+                    name: hellored
+    replicas: 2
+    selector:
+        matchLabels:
+            app: hellored
+            type: front-end
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: app-deployment-helloblue
+    labels:
+        app: helloblue
+        type: front-end
+spec:
+    template:
+        metadata:
+            name: helloblue
+            labels:
+                app: helloblue
+                type: front-end
+        spec:
+            containers:
+                - name: helloblue
+                  image: nginx
+                  volumeMounts:
+                    - name: helloblue
+                      mountPath: /etc/nginx/conf.d
+            volumes:
+                - name: helloblue
+                  configMap:
+                    name: helloblue
+    replicas: 2
+    selector:
+        matchLabels:
+            app: helloblue
+            type: front-end
+
+---
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: app-deployment-helloblack
+    labels:
+        app: helloblack
+        type: front-end
+spec:
+    template:
+        metadata:
+            name: helloblack
+            labels:
+                app: helloblack
+                type: front-end
+        spec:
+            containers:
+                - name: helloblack
+                  image: nginx
+                  volumeMounts:
+                    - name: helloblack
+                      mountPath: /etc/nginx/conf.d
+            volumes:
+                - name: helloblack
+                  configMap:
+                    name: helloblack
+    replicas: 2
+    selector:
+        matchLabels:
+            app: helloblack
+            type: front-end
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-service-hellored
+  labels:
+        app: hellored
+        type: front-end
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: hellored
+    type: front-end
+
+
+---
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-service-helloblue
+  labels:
+        app: helloblue
+        type: front-end
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: helloblue
+    type: front-end
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-service-helloblack
+  labels:
+        app: helloblack
+        type: front-end
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: helloblack
+    type: front-end
+
+
+---
+
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: app-ingress-hello
+  annotations:
+    traefik.frontend.rule.type: PathPrefixStrip
+spec:
+  backend:
+    serviceName: app-service-helloblack
+    servicePort: 80
+  rules:
+  - http:
+      paths:
+      - backend:
+          serviceName: app-service-hellored
+          servicePort: 80
+        path: /red
+  - http:
+      paths:
+      - backend:
+          serviceName: app-service-helloblue
+          servicePort: 80
+        path: /blue
