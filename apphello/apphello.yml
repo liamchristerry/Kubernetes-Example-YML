@@ -17,12 +17,12 @@ spec:
                 - name: hellored
                   image: nginx
                   volumeMounts:
-                    - name: hellored
+                    - name: app-configmap-hellored
                       mountPath: /etc/nginx/conf.d
             volumes:
-                - name: hellored
+                - name: app-configmap-hellored
                   configMap:
-                    name: hellored
+                    name: app-configmap-hellored
     replicas: 2
     selector:
         matchLabels:
@@ -50,12 +50,12 @@ spec:
                 - name: helloblue
                   image: nginx
                   volumeMounts:
-                    - name: helloblue
+                    - name: app-configmap-helloblue
                       mountPath: /etc/nginx/conf.d
             volumes:
-                - name: helloblue
+                - name: app-configmap-helloblue
                   configMap:
-                    name: helloblue
+                    name: app-configmap-helloblue
     replicas: 2
     selector:
         matchLabels:
@@ -84,12 +84,12 @@ spec:
                 - name: helloblack
                   image: nginx
                   volumeMounts:
-                    - name: helloblack
+                    - name: app-configmap-helloblack
                       mountPath: /etc/nginx/conf.d
             volumes:
-                - name: helloblack
+                - name: app-configmap-helloblack
                   configMap:
-                    name: helloblack
+                    name: app-configmap-helloblack
     replicas: 2
     selector:
         matchLabels:
@@ -181,3 +181,58 @@ spec:
           serviceName: app-service-helloblue
           servicePort: 80
         path: /blue
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-configmap-hellored
+  namespace: default
+data:
+  nginxa.conf: |
+    server {
+    listen 80;
+
+    location / {
+        add_header Content-Type text/plain;
+        return 200 'Hello World!\n POD RED\n';
+        }
+    }   
+
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-configmap-helloblue
+  namespace: default
+data:
+  nginxa.conf: |
+    server {
+    listen 80;
+
+    location / {
+        add_header Content-Type text/plain;
+        return 200 'Hello World!\n POD BLUE\n';
+        }
+    }   
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-configmap-helloblack
+  namespace: default
+data:
+  nginxa.conf: |
+    server {
+    listen 80;
+
+    location / {
+        add_header Content-Type text/plain;
+        return 200 'Hello World!\n POD BLACK\n';
+        }
+    }   
