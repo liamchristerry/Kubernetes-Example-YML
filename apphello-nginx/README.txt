@@ -1,0 +1,1 @@
+Current ingress setup is configured to use Nginx ingress controller. 
