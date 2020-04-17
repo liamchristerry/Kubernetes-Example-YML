@@ -1,3 +1,5 @@
+#defines the deployment for the backend web PODS
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -98,6 +100,7 @@ spec:
 
 
 ---
+#defines the services the backend PODs connect to. Cluster IPs
 
 apiVersion: v1
 kind: Service
@@ -156,6 +159,8 @@ spec:
 
 
 ---
+#defines the ingress resource. Ingress Controller is listening on port 80, the 
+#forwards traffic to port 80 to the services
 
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
@@ -182,6 +187,7 @@ spec:
           servicePort: 80
 
 ---
+#defines the config maps. This is used to modify the backend web servers config
 
 apiVersion: v1
 kind: ConfigMap

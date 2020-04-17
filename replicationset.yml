@@ -1,22 +1,31 @@
 apiVersion: apps/v1
 kind: ReplicaSet
 metadata:
-        name: rs-webapp
-        labels:
-                app: webapp
-                type: front-end
+  name: rs-webapp #Name of the the replicaSet, base name of the PODs
+  labels:
+    app: webapp
+    type: front-end
 spec:
-        template:
-                metadata:
-                        name: nginxv1
-                        labels:
-                                app: webapp
-                                type: front-end
-                spec:
-                        containers:
-                                - name: nginx-webserver
-                                  image: nginx
-        replicas: 3
-        selector:
-                matchLabels:
-                        type: front-end
+  template:
+    metadata:
+      name: nginxv1 #Name of the POD, POD name is overwritten by the RS name
+      labels:
+        app: webapp 
+        type: front-end #Binds PODs to ReplicationSet
+    spec:
+      containers:
+        - name: nginx-webserver
+          image: nginx
+  replicas: 3 #Number of replicas in the set
+  selector:
+    matchLabels:
+      type: front-end
+
+
+#kubectl get replicasets.apps
+#NAME          DESIRED   CURRENT   READY   AGE
+#rs-webapp     2         2         2       4h50m
+
+#kubectl get pods
+#NAME                READY   STATUS    RESTARTS   AGE
+#rs-webapp-#####     1/1     Running   0          4h52m

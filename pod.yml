@@ -1,13 +1,44 @@
 apiVersion: v1
 kind: Pod
 metadata:
-        # (name of the POD)
-        name: nginxv1
-        labels:
-                app: webapp
-                type: front-end
+  name: nginxv1 #Name of POD
+  labels:
+    app: webapp
+    type: front-end
 spec:
-        containers:
-                #(name of the container in the POD)
-                - name: nginx-webserver
-                  image: nginx
+  containers:
+    - name: nginx-webserver #Name of the container in the POD
+      image: nginx #Image to use from registry
+
+#kubectl get pods
+#NAME                READY   STATUS    RESTARTS   AGE
+#nginxv1             1/1     Running   0          3h20m
+
+---
+
+#POD with external storage mounted to it
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginxv1 #Name of POD
+  labels:
+    app: webapp
+    type: front-end
+spec:
+  volumes:
+    - name: volume1 #Binds PVC to volumeMount in the container
+      persistentVolumeClaim:
+        claimName: pv-nfs-claim #Name of the PVC the POD uses to request storage from PV 
+                                #PVC needs to be created seperatly
+  containers:
+    - name: nginx-webserver #Name of conatainer in POD
+      image: nginx #Image to use from registry
+      volumeMounts:
+        - mountPath: "/mnt/podnfs" #Mounting point in the container
+          name: volume1 #Binds volumeMount in the container to the PVC
+
+#kubectl get pods
+#NAME                READY   STATUS    RESTARTS   AGE
+#nginxv1             1/1     Running   0          3h20m
+

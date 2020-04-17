@@ -1,22 +1,35 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-        name: deploy-webapp
-        labels:
-                app: webapp
-                type: front-end
+  name: deploy-webapp #Name of the deployment. Replicaset/PODs will have the same base name
+  labels:
+    app: webapp
+    type: front-end
 spec:
-        template:
-                metadata:
-                        name: nginxv1
-                        labels:
-                                app: webapp
-                                type: front-end
-                spec:
-                          containers:
-                               - name: nginx-webserver
-                                 image: nginx
-        replicas: 2
-        selector:
-                matchLabels:
-                        type: front-end
+  template:
+    metadata:
+      name: nginxv1 #Deployment name takes over
+      labels:
+        app: webapp
+        type: front-end
+    spec:
+      containers:
+        - name: nginx-webserver #Deployment name takes over
+          image: nginx #Image to pull from registry
+  replicas: 2 #Number of replicas to be created by this deployment
+  selector: #Binds the deployment to PODs
+    matchLabels:
+      type: front-end
+
+#kubectl get deployments.app
+#NAME                        READY   UP-TO-DATE   AVAILABLE   AGE
+#deploy-webapp               2/2     2            2           4m47s
+
+#kubectl get replicasets.apps
+#NAME                                  DESIRED   CURRENT   READY   AGE
+#deploy-webapp-####                    2         2         2       5m51s
+
+#kubectl get pods
+#NAME                                        READY   STATUS    RESTARTS   AGE
+#deploy-webapp-########-#####                1/1     Running   0          3h20m
+

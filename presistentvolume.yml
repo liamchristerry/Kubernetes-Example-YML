@@ -1,15 +1,21 @@
 kind: PersistentVolume
 apiVersion: v1
 metadata:
-   name: pv-nfs
+   name: pv-nfs #Name of the PV 
    labels:
       type: local
 spec:
    storageClassName: manual
+   #https://kubernetes.io/docs/concepts/storage/storage-classes/
    capacity:
-      storage: 10Gi
+      storage: 10Gi #Amount of data that this PV has claim to
    accessModes:
     - ReadWriteOnce 
-   nfs:
-    server: 192.168.182.16
-    path: /mnt/nfs
+      #https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes 
+   nfs: #storage Plugin type
+    server: 192.168.182.16 #Server that is publishing the NFS mount point
+    path: /mnt/nfs #Mount point on the NFS server
+
+#NAME     CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                  STORAGECLASS   REASON   AGE
+#pv-nfs   10Gi       RWO            Retain           Bound    default/pv-nfs-claim   manual                  65m
+#NOTE that this is bound to the PVC

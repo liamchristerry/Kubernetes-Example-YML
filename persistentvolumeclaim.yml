@@ -1,11 +1,20 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: pv-nfs-claim
+  name: pv-nfs-claim #Name of the PVC. Binds the POD to the claim
 spec:
   storageClassName: manual
+  #https://kubernetes.io/docs/concepts/storage/storage-classes/
   accessModes:
     - ReadWriteOnce
+    #https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes
   resources:
     requests:
-      storage: 3Gi
+      storage: 3Gi #Amount of storage the PVC will give the POD
+  selector:
+    matchLabels:
+       app: webapp
+
+#kubectl get pvc
+#NAME           STATUS   VOLUME   CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+#pv-nfs-claim   Bound    pv-nfs   10Gi       RWO            manual         67m
